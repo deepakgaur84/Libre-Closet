@@ -12,12 +12,17 @@ WORKDIR /app
 # the destination must be a directory and end with a /
 COPY package*.json ./
 COPY patches ./patches
-# Retry flaky downloads (the background-removal model package is large) and
-# keep a download cache so a retry or the second stage doesn't start over.
+# The 285 MB background-removal model package is hosted on a CDN that often
+# drops the connection from CI machines. If it was pre-downloaded into ./vendor
+# (the GitHub workflow does this with a resumable download), seed npm's cache
+# with it so `npm ci` never has to fetch it. The bind mount keeps the file out
+# of the image layers. Without the file, npm simply downloads it as usual.
 RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=bind,source=vendor,target=/vendor \
     npm config set fetch-retries 6 \
     && npm config set fetch-retry-mintimeout 20000 \
     && npm config set fetch-retry-maxtimeout 180000 \
+    && if [ -f /vendor/imgly-data.tgz ]; then npm cache add /vendor/imgly-data.tgz; fi \
     && npm ci
 
 COPY src ./src
@@ -37,12 +42,17 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY patches ./patches
-# Retry flaky downloads (the background-removal model package is large) and
-# keep a download cache so a retry or the second stage doesn't start over.
+# The 285 MB background-removal model package is hosted on a CDN that often
+# drops the connection from CI machines. If it was pre-downloaded into ./vendor
+# (the GitHub workflow does this with a resumable download), seed npm's cache
+# with it so `npm ci` never has to fetch it. The bind mount keeps the file out
+# of the image layers. Without the file, npm simply downloads it as usual.
 RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=bind,source=vendor,target=/vendor \
     npm config set fetch-retries 6 \
     && npm config set fetch-retry-mintimeout 20000 \
     && npm config set fetch-retry-maxtimeout 180000 \
+    && if [ -f /vendor/imgly-data.tgz ]; then npm cache add /vendor/imgly-data.tgz; fi \
     && npm ci
 
 # Copy built application from builder stage
