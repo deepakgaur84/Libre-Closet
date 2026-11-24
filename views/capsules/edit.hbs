@@ -1,0 +1,60 @@
+{{>navbar}}
+
+<main class="p-4 pt-20 pb-24 max-w-lg mx-auto">
+  <div class="flex items-center gap-3 mb-6">
+    <a href="/capsules/{{capsule.id}}" class="btn btn-ghost btn-sm btn-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+    </a>
+    <h1 class="text-2xl font-bold flex-1">{{t 'lang.CAPSULE_EDIT'}}</h1>
+  </div>
+
+  <form method="post" action="/capsules/{{capsule.id}}" class="flex flex-col gap-4">
+    <label class="form-control w-full">
+      <span class="label-text mb-1">{{t 'lang.CAPSULE_NAME'}}</span>
+      <input type="text" name="name" value="{{capsule.name}}" class="input input-bordered w-full" required maxlength="80" />
+    </label>
+
+    <label class="form-control w-full">
+      <span class="label-text mb-1">{{t 'lang.CAPSULE_SEASON'}}</span>
+      <input type="text" name="season" value="{{capsule.season}}" class="input input-bordered w-full" maxlength="40" placeholder="{{t 'lang.CAPSULE_SEASON_PLACEHOLDER'}}" />
+    </label>
+
+    <div class="grid grid-cols-2 gap-3">
+      <label class="form-control">
+        <span class="label-text mb-1">{{t 'lang.CAPSULE_TARGET_SIZE'}}</span>
+        <input type="number" name="targetSize" value="{{capsule.targetSize}}" min="1" max="500" class="input input-bordered w-full" required />
+      </label>
+      <label class="form-control">
+        <span class="label-text mb-1">{{t 'lang.CAPSULE_NEUTRAL_TARGET'}}</span>
+        <input type="number" name="neutralTarget" value="{{capsule.neutralTarget}}" min="0" max="100" class="input input-bordered w-full" required />
+      </label>
+    </div>
+
+    <div>
+      <h2 class="font-semibold mb-1">{{t 'lang.CAPSULE_QUOTAS'}}</h2>
+      <p class="text-xs text-base-content/60 mb-3">{{t 'lang.CAPSULE_QUOTA_EDIT_HELP'}}</p>
+      <div class="flex flex-col gap-2" id="quota-rows">
+        {{#each rows}}
+        <div class="flex items-center gap-3">
+          <input type="hidden" name="quotaCategory" value="{{this.category}}" />
+          <span class="flex-1 capitalize">{{this.label}}</span>
+          <input type="number" name="quotaCount" value="{{this.quota}}" min="0" max="200" class="input input-bordered input-sm w-24" />
+        </div>
+        {{/each}}
+        <div class="flex items-center gap-3">
+          <input type="text" name="quotaCategory" class="input input-bordered input-sm flex-1" maxlength="40" placeholder="{{t 'lang.CAPSULE_ADD_CATEGORY'}}" />
+          <input type="number" name="quotaCount" value="0" min="0" max="200" class="input input-bordered input-sm w-24" />
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-3 justify-end">
+      <a href="/capsules/{{capsule.id}}" class="btn btn-ghost">{{t 'lang.CANCEL'}}</a>
+      <button type="submit" class="btn btn-primary">{{t 'lang.SAVE'}}</button>
+    </div>
+  </form>
+</main>
+
+{{>dock}}

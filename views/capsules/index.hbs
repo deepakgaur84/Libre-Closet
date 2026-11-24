@@ -1,0 +1,42 @@
+{{>navbar}}
+
+<main class="p-4 pt-20 pb-24">
+  <div class="flex items-center justify-between mb-6 px-2">
+    <h1 class="text-2xl font-bold">{{t 'lang.CAPSULES'}}</h1>
+    <a href="/capsules/new" class="btn btn-primary btn-sm">+ {{t 'lang.NEW_CAPSULE'}}</a>
+  </div>
+
+  {{#if capsules.length}}
+  <div class="flex flex-wrap gap-4 justify-center">
+    {{#each capsules}}
+    <a href="/capsules/{{this.id}}" class="card bg-base-100 w-96 shadow-sm hover:shadow-md transition-shadow">
+      <div class="card-body p-4 gap-2">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="card-title text-base truncate">{{this.name}}</h2>
+          {{#if this.season}}<span class="badge badge-outline badge-sm">{{this.season}}</span>{{/if}}
+        </div>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="font-semibold">{{this.total}} / {{this.targetSize}}</span>
+          <span class="text-base-content/60">{{t 'lang.CAPSULE_PIECES'}}</span>
+        </div>
+        <progress class="progress progress-primary w-full" value="{{this.progressPercent}}" max="100"></progress>
+        <div class="flex justify-between text-xs text-base-content/70">
+          <span>{{this.outfitCount}} {{t 'lang.CAPSULE_OUTFITS'}}</span>
+          {{#if this.neutralPercent}}<span>{{this.neutralPercent}}% {{t 'lang.CAPSULE_NEUTRALS'}}</span>{{/if}}
+        </div>
+      </div>
+    </a>
+    {{/each}}
+  </div>
+  {{else}}
+  <div class="flex flex-col items-center justify-center gap-4 pt-20 text-base-content/40">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="size-16">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+    </svg>
+    <p>{{t 'lang.CAPSULE_NO_CAPSULES'}}</p>
+    <a href="/capsules/new" class="btn btn-primary btn-sm">{{t 'lang.CAPSULE_CREATE_FIRST'}}</a>
+  </div>
+  {{/if}}
+</main>
+
+{{>dock}}

@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- ...
+#### Added
+
+- Capsule wardrobes: pick a subset of your garments, set per-category piece targets (Men's, Women's, Travel and Custom starter templates, men by default) and see how many wearable outfits the capsule makes, its neutral/accent color balance, weak pieces and what is still missing
+- Generate a varied set of saved outfits from a capsule
+- New "Capsules" tab in the bottom navigation
+
+#### Changed
+
+- Docker publish workflow now builds on every push to `main` and publishes only to this repository's GitHub Container Registry (linux/amd64)
 
 ## 0.6.0 2026-10-5
 

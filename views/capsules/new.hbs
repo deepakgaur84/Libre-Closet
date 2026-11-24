@@ -1,0 +1,53 @@
+{{>navbar}}
+
+<main class="p-4 pt-20 pb-24 max-w-lg mx-auto">
+  <div class="flex items-center gap-3 mb-6">
+    <a href="/capsules" class="btn btn-ghost btn-sm btn-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+    </a>
+    <h1 class="text-2xl font-bold flex-1">{{t 'lang.NEW_CAPSULE'}}</h1>
+  </div>
+
+  <form method="post" action="/capsules" class="flex flex-col gap-4">
+    <label class="form-control w-full">
+      <span class="label-text mb-1">{{t 'lang.CAPSULE_NAME'}}</span>
+      <input type="text" name="name" class="input input-bordered w-full" required maxlength="80" placeholder="{{t 'lang.CAPSULE_NAME_PLACEHOLDER'}}" />
+    </label>
+
+    <label class="form-control w-full">
+      <span class="label-text mb-1">{{t 'lang.CAPSULE_SEASON'}}</span>
+      <input type="text" name="season" class="input input-bordered w-full" maxlength="40" placeholder="{{t 'lang.CAPSULE_SEASON_PLACEHOLDER'}}" />
+    </label>
+
+    <fieldset class="flex flex-col gap-3">
+      <legend class="label-text mb-1">{{t 'lang.CAPSULE_TEMPLATE'}}</legend>
+      {{#each templates}}
+      <label class="card bg-base-100 shadow-sm cursor-pointer has-[:checked]:ring-2 has-[:checked]:ring-primary">
+        <div class="card-body p-4 gap-1">
+          <div class="flex items-center gap-3">
+            <input type="radio" name="template" value="{{this.key}}" class="radio radio-primary" {{#if this.selected}}checked{{/if}} />
+            <span class="font-semibold flex-1">{{this.label}}</span>
+            {{#if this.pieces}}<span class="text-sm text-base-content/60">{{this.pieces}} {{t 'lang.CAPSULE_PIECES'}}</span>{{/if}}
+          </div>
+          {{#if this.categories.length}}
+          <p class="text-xs text-base-content/60 pl-9">
+            {{#each this.categories}}{{this.count}}&nbsp;{{this.label}}{{#unless @last}} · {{/unless}}{{/each}}
+          </p>
+          {{/if}}
+        </div>
+      </label>
+      {{/each}}
+    </fieldset>
+
+    <p class="text-xs text-base-content/60">{{t 'lang.CAPSULE_TEMPLATE_HELP'}}</p>
+
+    <div class="flex gap-3 justify-end">
+      <a href="/capsules" class="btn btn-ghost">{{t 'lang.CANCEL'}}</a>
+      <button type="submit" class="btn btn-primary">{{t 'lang.CAPSULE_CREATE'}}</button>
+    </div>
+  </form>
+</main>
+
+{{>dock}}

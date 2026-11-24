@@ -1,0 +1,124 @@
+{{>navbar}}
+
+<main class="p-4 pt-20 pb-24 max-w-3xl mx-auto">
+  <div class="flex items-center gap-3 mb-4">
+    <a href="/capsules" class="btn btn-ghost btn-sm btn-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+    </a>
+    <h1 class="text-2xl font-bold flex-1 truncate">{{capsule.name}}</h1>
+    {{#if capsule.season}}<span class="badge badge-outline">{{capsule.season}}</span>{{/if}}
+  </div>
+
+  {{!-- Headline numbers --}}
+  <div class="stats stats-vertical sm:stats-horizontal shadow-sm w-full mb-4 bg-base-100">
+    <div class="stat">
+      <div class="stat-title">{{t 'lang.CAPSULE_PIECES'}}</div>
+      <div class="stat-value text-2xl">{{summary.total}} <span class="text-base font-normal text-base-content/60">/ {{summary.targetSize}}</span></div>
+      <div class="stat-desc"><progress class="progress progress-primary w-full" value="{{summary.progressPercent}}" max="100"></progress></div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">{{t 'lang.CAPSULE_OUTFITS'}}</div>
+      <div class="stat-value text-2xl">{{summary.outfitCount}}</div>
+      <div class="stat-desc">{{t 'lang.CAPSULE_OUTFITS_HELP'}}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">{{t 'lang.CAPSULE_COLOR_BALANCE'}}</div>
+      {{#if summary.neutralPercent}}
+      <div class="stat-value text-2xl">{{summary.neutralPercent}}%</div>
+      <div class="stat-desc">{{t 'lang.CAPSULE_NEUTRALS'}} · {{t 'lang.CAPSULE_TARGET_SHORT'}} {{capsule.neutralTarget}}%</div>
+      {{else}}
+      <div class="stat-value text-2xl">–</div>
+      <div class="stat-desc">{{t 'lang.CAPSULE_NO_COLORS'}}</div>
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- What's missing --}}
+  <div class="mb-6">
+    <h2 class="font-semibold mb-2">{{t 'lang.CAPSULE_GAPS_TITLE'}}</h2>
+    {{#if gaps.length}}
+    <ul class="flex flex-col gap-2">
+      {{#each gaps}}
+      <li class="alert alert-warning py-2 text-sm">{{this}}</li>
+      {{/each}}
+    </ul>
+    {{else}}
+    {{#if hasPieces}}
+    <div class="alert alert-success py-2 text-sm">{{t 'lang.CAPSULE_ALL_GOOD'}}</div>
+    {{else}}
+    <div class="alert py-2 text-sm">{{t 'lang.CAPSULE_NO_PIECES'}}</div>
+    {{/if}}
+    {{/if}}
+  </div>
+
+  {{!-- Quotas --}}
+  {{#if categories.length}}
+  <div class="mb-6">
+    <h2 class="font-semibold mb-2">{{t 'lang.CAPSULE_QUOTAS'}}</h2>
+    <div class="flex flex-col gap-3 bg-base-100 rounded-box shadow-sm p-4">
+      {{#each categories}}
+      <div>
+        <div class="flex justify-between text-sm mb-1">
+          <span class="capitalize">{{this.label}}</span>
+          <span class="{{#if this.short}}text-warning{{/if}}{{#if this.over}}text-error{{/if}}">
+            {{this.count}}{{#unless this.unplanned}} / {{this.quota}}{{/unless}}
+          </span>
+        </div>
+        <progress class="progress {{#if this.ok}}progress-success{{/if}}{{#if this.short}}progress-warning{{/if}}{{#if this.over}}progress-error{{/if}}{{#if this.unplanned}}progress-info{{/if}} w-full" value="{{this.percent}}" max="100"></progress>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Pieces --}}
+  {{#if groups.length}}
+  <div class="mb-6">
+    <h2 class="font-semibold mb-1">{{t 'lang.CAPSULE_YOUR_PIECES'}}</h2>
+    <p class="text-xs text-base-content/60 mb-3">{{t 'lang.CAPSULE_NUMBER_LEGEND'}}</p>
+    {{#each groups}}
+    <h3 class="text-sm font-semibold capitalize mt-3 mb-2">{{this.label}}</h3>
+    <div class="flex flex-wrap gap-3">
+      {{#each this.garments}}
+      <a href="/wardrobe/{{this.id}}" class="relative flex flex-col items-center gap-1 w-24">
+        {{#if this.photo}}
+        <img src="/file/nobg/{{this.photo.fileName}}" alt="{{this.name}}" class="size-20 rounded-box object-cover shadow-sm {{#if this.weak}}ring-2 ring-warning{{/if}}" />
+        {{else}}
+        <div class="size-20 rounded-box bg-base-200 {{#if this.weak}}ring-2 ring-warning{{/if}}"></div>
+        {{/if}}
+        <span class="badge badge-sm {{#if this.weak}}badge-warning{{else}}badge-ghost{{/if}} absolute top-1 right-1">{{this.outfits}}</span>
+        <span class="text-xs text-center line-clamp-2 leading-tight">{{this.name}}</span>
+      </a>
+      {{/each}}
+    </div>
+    {{/each}}
+    <p class="text-xs text-base-content/60 mt-3"><span class="badge badge-warning badge-xs"></span> {{t 'lang.CAPSULE_WEAK_HINT'}}</p>
+  </div>
+  {{/if}}
+
+  {{!-- Generate outfits --}}
+  <div class="bg-base-100 rounded-box shadow-sm p-4 mb-6">
+    <h2 class="font-semibold mb-1">{{t 'lang.CAPSULE_GENERATE'}}</h2>
+    <p class="text-xs text-base-content/60 mb-3">{{t 'lang.CAPSULE_GENERATE_HINT'}}</p>
+    {{#if hasOutfits}}
+    <form method="post" action="/capsules/{{capsule.id}}/generate" class="flex items-center gap-3">
+      <input type="number" name="count" value="10" min="1" max="50" class="input input-bordered input-sm w-24" aria-label="{{t 'lang.CAPSULE_GENERATE_COUNT'}}" />
+      <button type="submit" class="btn btn-primary btn-sm">{{t 'lang.CAPSULE_GENERATE_BUTTON'}}</button>
+    </form>
+    {{else}}
+    <p class="text-sm text-base-content/50 italic">{{t 'lang.CAPSULE_GENERATE_NEED_PIECES'}}</p>
+    {{/if}}
+  </div>
+
+  {{!-- Actions --}}
+  <div class="divider"></div>
+  <div class="flex gap-3 justify-between items-center">
+    <a href="/capsules/{{capsule.id}}/pieces" class="btn btn-primary btn-sm">{{t 'lang.CAPSULE_MANAGE_PIECES'}}</a>
+    <a href="/capsules/{{capsule.id}}/edit" class="btn btn-outline btn-sm">{{t 'lang.CAPSULE_EDIT_SHORT'}}</a>
+    <button hx-delete="/capsules/{{capsule.id}}" hx-confirm="{{t 'lang.CONFIRM_DELETE'}}" class="btn btn-error btn-sm btn-outline">{{t 'lang.DELETE'}}</button>
+  </div>
+</main>
+
+{{>dock}}

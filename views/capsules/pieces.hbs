@@ -1,0 +1,48 @@
+{{>navbar}}
+
+<main class="p-4 pt-20 pb-40">
+  <div class="flex items-center gap-3 mb-2 px-2">
+    <a href="/capsules/{{capsule.id}}" class="btn btn-ghost btn-sm btn-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+    </a>
+    <h1 class="text-2xl font-bold flex-1 truncate">{{capsule.name}}</h1>
+  </div>
+  <p class="text-sm text-base-content/60 mb-4 px-2">{{t 'lang.CAPSULE_PICK_HELP'}}</p>
+
+  {{#if empty}}
+  <div class="flex flex-col items-center gap-4 pt-16 text-base-content/50">
+    <p>{{t 'lang.CAPSULE_NO_GARMENTS'}}</p>
+    <a href="/wardrobe/new" class="btn btn-primary btn-sm">+ {{t 'lang.NEW_GARMENT'}}</a>
+  </div>
+  {{else}}
+  <form method="post" action="/capsules/{{capsule.id}}/pieces">
+    {{#each groups}}
+    <h2 class="font-semibold capitalize mt-4 mb-2 px-2">{{this.label}}</h2>
+    <div class="flex flex-wrap gap-3 px-2">
+      {{#each this.garments}}
+      <label class="card bg-base-100 w-28 shadow-sm cursor-pointer has-[:checked]:ring-2 has-[:checked]:ring-primary">
+        <figure class="aspect-square bg-base-200">
+          {{#if this.photo}}
+          <img src="/file/nobg/{{this.photo.fileName}}" alt="{{this.name}}" class="object-cover w-full h-full" />
+          {{/if}}
+        </figure>
+        <div class="p-2 flex items-start gap-2">
+          <input type="checkbox" name="garmentId" value="{{this.id}}" class="checkbox checkbox-primary checkbox-xs mt-0.5" {{#if this.selected}}checked{{/if}} />
+          <span class="text-xs leading-tight line-clamp-2">{{this.name}}</span>
+        </div>
+      </label>
+      {{/each}}
+    </div>
+    {{/each}}
+
+    <div class="fixed bottom-20 inset-x-0 flex justify-center gap-3 p-3 bg-base-100/90 backdrop-blur">
+      <a href="/capsules/{{capsule.id}}" class="btn btn-ghost">{{t 'lang.CANCEL'}}</a>
+      <button type="submit" class="btn btn-primary">{{t 'lang.CAPSULE_SAVE_PIECES'}}</button>
+    </div>
+  </form>
+  {{/if}}
+</main>
+
+{{>dock}}

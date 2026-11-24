@@ -14,6 +14,12 @@ Crafted and engineered with care and intention by [Lazztech LLC](https://lazz.te
 
 ---
 
+## About this fork
+
+This is a fork of [lazztech/libre-closet](https://github.com/lazztech/libre-closet) that adds **Capsule wardrobes**: choose a small set of pieces from your wardrobe, set how many you want in each category (Men's template by default, plus Women's, Travel and Custom), and see how many outfits the capsule makes, how balanced its colors are, which pieces are weak links and what is still missing. It can also save a varied set of outfits straight from a capsule. Everything else is unchanged and the original license (AGPL-3.0) applies.
+
+---
+
 ## Significant News
 
 **`v0.6.0` Weather Forcasting - October 5, 2026**
