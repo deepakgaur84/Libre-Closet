@@ -12,7 +12,13 @@ WORKDIR /app
 # the destination must be a directory and end with a /
 COPY package*.json ./
 COPY patches ./patches
-RUN npm ci
+# Retry flaky downloads (the background-removal model package is large) and
+# keep a download cache so a retry or the second stage doesn't start over.
+RUN --mount=type=cache,target=/root/.npm \
+    npm config set fetch-retries 6 \
+    && npm config set fetch-retry-mintimeout 20000 \
+    && npm config set fetch-retry-maxtimeout 180000 \
+    && npm ci
 
 COPY src ./src
 COPY views ./views
@@ -31,7 +37,13 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY patches ./patches
-RUN npm ci
+# Retry flaky downloads (the background-removal model package is large) and
+# keep a download cache so a retry or the second stage doesn't start over.
+RUN --mount=type=cache,target=/root/.npm \
+    npm config set fetch-retries 6 \
+    && npm config set fetch-retry-mintimeout 20000 \
+    && npm config set fetch-retry-maxtimeout 180000 \
+    && npm ci
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
